@@ -1,5 +1,10 @@
-extends layout
 
-block content
+extends header
+
+block left
   h1= title
-  p Weluucome to #{title}
+  h1= success
+  h1= error
+  a(href="/", title="首页").class  index
+  a(href="/login", title="登录").class  login 
+  a(href="/reg", title="注册").class register
