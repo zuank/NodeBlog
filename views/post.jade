@@ -1,7 +1,11 @@
-extends header
+extends left
 
-block left
-    h1= title
-    a(href="/", title="首页").class  index
-    a(href="/login", title="登录").class  login 
-    a(href="/reg", title="注册").class register
+block right
+    form(method="post").post
+        span.title= "标题"
+        input(type="text" name="title")
+        
+        span.post= "正文"
+        textarea(name="post", cols="30", rows="10")
+        
+        input(type="submit" value="发表" )

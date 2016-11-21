@@ -1,0 +1,12 @@
+extends header
+
+block left
+    a(href="/", title="首页").class  index
+    - if(!user)
+        a(href="/login", title="登录").class  login 
+        a(href="/reg", title="注册").class register
+    - else
+        a(href="/logout", title="登出").class logout
+        a(href="/post", title="发表").class post
+    
+    

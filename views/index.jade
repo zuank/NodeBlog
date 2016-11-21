@@ -1,10 +1,12 @@
 
-extends header
+extends left
 
-block left
-  h1= title
-  h1= success
-  h1= error
-  a(href="/", title="首页").class  index
-  a(href="/login", title="登录").class  login 
-  a(href="/reg", title="注册").class register
+block right
+  each val in posts
+    p=val.title
+    p
+      作者: #{val.name} | 日期: #{val.time.minute}
+    div.post
+      !{val.post}
+    
+  

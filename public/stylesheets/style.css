@@ -1,11 +1,93 @@
 * {
-    margin: 0;
-    padding: 0;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  line-height: 150%;
 }
-
-.container {}
-
-.left {
-    margin: 0 0 20px 0;
+a {
+  text-decoration: none;
+}
+.inputText {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 2px;
+}
+.container div.header {
+  margin: 0 0 0 20%;
+  line-height: 30px;
+  border-bottom: 2px solid skyblue;
+}
+.container div.header div {
+  display: inline-block;
+}
+.container div.header .title {
+  font-size: 20px;
+  font-weight: 700;
+}
+.container .left {
+  float: left;
+  width: 20%;
+}
+.container .left a {
+  display: block;
+  text-align: right;
+  padding-right: 20%;
+  line-height: 150%;
+}
+.container .right {
+  float: left;
+  width: 80%;
+  text-align: center;
+}
+.container .right > .post {
+  text-align: left;
+}
+.container .right .login,
+.container .right .reg {
+  margin: 30px;
+}
+.container .right .login p,
+.container .right .reg p {
+  line-height: 150%;
+  vertical-align: middle;
+}
+.container .right .login span,
+.container .right .reg span {
+  display: inline-block;
+  width: 80px;
+  text-align: right;
+}
+.container .right .login input,
+.container .right .reg input {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 2px;
+}
+.container .right .login input[type=submit],
+.container .right .reg input[type=submit] {
+  display: inline-block;
+  width: 20%;
+  margin: 5px auto;
+}
+.container .right .post span {
+  display: inline-block;
+  width: 10%;
+  text-align: center;
+}
+.container .right .post input[type=text],
+.container .right .post textarea {
+  padding: 2px ;
+  width: 90%;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.container .right .post textarea {
+  resize: vertical;
+  vertical-align: text-top;
+}
+.container .right .post input[type=submit] {
+  margin: 10px 0 0 0 ;
+  width: 90%;
+  float: right;
 }

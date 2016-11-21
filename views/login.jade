@@ -1,19 +1,11 @@
-extends header
-
-block left
-    h1= title
-    h1= success
-    h1= error
-    a(href="/", title="首页").class  index
-    a(href="/login", title="登录").class  login 
-    a(href="/reg", title="注册").class register
+extends left
 
 block right
-    form(method="post")
+    form(method="post").login
         p
-            用户名：
+            span= "用户名："
             input(type="text" name="name")
         p
-            密码：
+            span= "密码："
             input(type="password" name="password")
         input(type="submit" value="提交")
