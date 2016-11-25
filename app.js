@@ -8,7 +8,7 @@ var session = require("express-session");
 var MongoStore = require("connect-mongo")(session);
 var settings = require("./settings");
 var index = require('./routes/index');
-var flash = require("connect-flash")
+var flash = require("connect-flash");
 var app = express();
 
 // view engine setup
@@ -23,7 +23,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(session({
     resave: false,
     saveUninitialized: true,
@@ -57,5 +56,4 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-
 module.exports = app;

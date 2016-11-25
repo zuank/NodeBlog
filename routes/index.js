@@ -1,6 +1,8 @@
 var crypto = require("crypto");
 var User = require("../models/user.js");
 var Post = require("../models/post.js");
+var multer = require('multer');
+var upload = multer({ dest: './public/images' });
 
 module.exports = function(app) {
     app.get('/', function(req, res) {
@@ -121,6 +123,21 @@ module.exports = function(app) {
         req.session.user = null;
         req.flash("success", "登出成功");
         return res.redirect("/");
+    });
+    app.get("/upload", checkLogin);
+    app.get("/upload", function(req, res) {
+        res.render("upload", {
+            title: "文件上传",
+            user: req.session.user,
+            success: req.flash("success").toString(),
+            error: req.flash("error").toString(),
+        })
+    });
+    app.post("/upload", checkLogin);
+    app.post("/upload", upload.array('photos', 5), function(req, res) {
+        console.log(req.files)
+        req.flash("success", "文件上传成功");
+        res.redirect("/upload");
     });
 };
 
