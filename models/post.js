@@ -16,7 +16,9 @@ Post.prototype.save = function(callback) {
         year: date.getFullYear(),
         month: date.getFullYear() + "-" + (date.getMonth() + 1),
         day: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
-        minute: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getHours() + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes())
+        minute: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getHours() + ":" + (date.getMinutes() < 10
+            ? "0" + date.getMinutes()
+            : date.getMinutes())
     }
     var post = {
         name: this.name,
@@ -33,7 +35,9 @@ Post.prototype.save = function(callback) {
                 mongodb.close();
                 return callback(err);
             }
-            collection.insert(post, { safe: true }, function(err) {
+            collection.insert(post, {
+                safe: true
+            }, function(err) {
                 mongodb.close();
                 if (err) {
                     return callback(err);
@@ -43,7 +47,7 @@ Post.prototype.save = function(callback) {
         })
     })
 };
-Post.prototype.get = function(name, callback) {
+Post.getAll = function(name, callback) {
     mongodb.open(function(err, db) {
         if (err) {
             mongodb.close();
@@ -58,7 +62,7 @@ Post.prototype.get = function(name, callback) {
             if (name) {
                 query.name = name;
             }
-            collection.find(query).sort({ time: -1 }).toArray(function(err, docs) {
+            collection.find(query).sort({time: -1}).toArray(function(err, docs) {
                 mongodb.close();
                 if (err) {
                     return callback(err);
@@ -71,3 +75,31 @@ Post.prototype.get = function(name, callback) {
         })
     })
 };
+// 获取一篇文章
+Post.getOne = function(name, day, title, callback) {
+    // 打开数据库
+    mongodb.open(function(err, db) {
+        if (err) {
+            return callback(err);
+        }
+        db.collection("posts", function(err, collection) {
+            if (err) {
+                mongodb.close();
+                return callback(err);
+            }
+            collection.findOne({
+                "name": name,
+                "time.day": day,
+                "title": title
+            }, function(err, doc) {
+                mongodb.close();
+                if (err) {
+                    return callback(err);
+                }
+                //解析markdown 为html
+                doc.post = markdown.toHTML(doc.post);
+                callback(null, doc);
+            })
+        })
+    })
+}

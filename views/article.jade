@@ -1,0 +1,7 @@
+extends left
+
+block right
+    p
+      a(href="/u/#{post.name}")=post.name
+      span=post.time.minute
+    !{post.post}

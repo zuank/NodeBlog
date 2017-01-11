@@ -1,13 +1,37 @@
 var crypto = require("crypto");
 var User = require("../models/user.js");
 var Post = require("../models/post.js");
+var fs = require('fs');
 var multer = require('multer');
-var upload = multer({ dest: './public/images' });
+var createFolder = function(folder) {
+    try {
+        fs.accessSync(folder);
+    } catch (e) {
+        fs.mkdirSync(folder);
+    }
+};
+
+var uploadFolder = './upload/';
+
+createFolder(uploadFolder);
+
+// 通过 filename 属性定制
+var storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, uploadFolder); // 保存的路径，备注：需要自己创建
+    },
+    filename: function(req, file, cb) {
+        // 将保存文件名设置为 字段名 + 时间戳，比如 logo-1478521468943
+        cb(null, file.fieldname + '-' + Date.now() + ".png");
+    }
+});
+
+// 通过 storage 选项来对 上传行为 进行定制化
+var upload = multer({storage: storage});
 
 module.exports = function(app) {
     app.get('/', function(req, res) {
-        var post = new Post();
-        post.get(null, function(err, posts) {
+        Post.getAll(null, function(err, posts) {
             if (err) {
                 posts = []
             }
@@ -42,11 +66,7 @@ module.exports = function(app) {
         //生成MD5加密
         var md5 = crypto.createHash("md5");
         var password = md5.update(req.body.password).digest("hex");
-        var newUser = new User({
-            name: req.body.name,
-            password: password,
-            email: req.body.email
-        });
+        var newUser = new User({name: req.body.name, password: password, email: req.body.email});
         User.get(newUser.name, function(err, user) {
             if (err) {
                 req.flash("error", err)
@@ -130,14 +150,49 @@ module.exports = function(app) {
             title: "文件上传",
             user: req.session.user,
             success: req.flash("success").toString(),
-            error: req.flash("error").toString(),
+            error: req.flash("error").toString()
         })
     });
     app.post("/upload", checkLogin);
     app.post("/upload", upload.array('photos', 5), function(req, res) {
-        console.log(req.files)
         req.flash("success", "文件上传成功");
         res.redirect("/upload");
+    });
+    app.get("/u/:name", function(req, res) {
+        User.get(req.params.name, function(err, user) {
+            if (!user) {
+                req.flash("error", "用户不存在！");
+                return res.redirect("/"); //用户不存在返回首页
+            }
+            Post.getAll(user.name, function(err, posts) {
+                if (err) {
+                    req.flash("error", err);
+                    return res.redirect("/");
+                }
+                res.render("user", {
+                    title: user.name,
+                    posts: posts,
+                    user: req.session.user,
+                    success: req.flash("success").toString(),
+                    error: req.flash("error").toString()
+                });
+            })
+        })
+    });
+    app.get("/u/:name/:day/:title", function(req, res) {
+        Post.getOne(req.params.name, req.params.day, req.params.title, function(err, post) {
+          if(err){
+            req.flash("error",err);
+            return res.redirect("/");
+          }
+          res.render("article",{
+            title:req.params.title,
+            post:post,
+            user:req.session.user,
+            success:req.flash("success").toString(),
+            error:req.flash("error").toString()
+          })
+        })
     });
 };
 
